@@ -253,6 +253,39 @@ if plates:
         notebook:
             "notebooks/aggregate_titers.py.ipynb"
 
+    rule aggregate_titers_marimo:
+        """Aggregate all serum titers using marimo notebook (alternative to aggregate_titers)."""
+        input:
+            pickles=lambda wc: [
+                rules.group_serum_titers.output.pickle.format(group=group, serum=serum)
+                for (group, serum) in groups_sera_plates()
+            ],
+            titers=lambda wc: [
+                rules.group_serum_titers.output.titers.format(group=group, serum=serum)
+                for (group, serum) in groups_sera_plates()
+            ],
+        output:
+            pickles=[
+                f"results/aggregated_titers_marimo/curvefits_{group}.pickle"
+                for group in groups
+            ],
+            titers=[
+                f"results/aggregated_titers_marimo/titers_{group}.csv"
+                for group in groups
+            ],
+            titers_chart="results/aggregated_titers_marimo/titers.html",
+            config="results/aggregated_titers_marimo/snakemake_config.json",
+        params:
+            viral_strain_plot_order=viral_strain_plot_order,
+            groups_sera=lambda wc: list(groups_sera_plates()),
+            groups=groups,
+        conda:
+            "environment.yml"
+        log:
+            "results/aggregated_titers_marimo/aggregate_titers_marimo.log",
+        script:
+            "scripts/run_aggregate_titers_marimo.py"
+
     rule aggregate_qc_drops:
         """Aggregate all QC drops."""
         input:
