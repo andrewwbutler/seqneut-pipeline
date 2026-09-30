@@ -1353,6 +1353,8 @@ if len(barcode_serum_replicates_fail_qc):
         titlesize=9,
         ticksize=10,
         draw_in_bounds=True,
+        sharex=False,
+        sharey=False,
     )
     report.figure(fig_fail_qc, curve_display_method)
 else:
@@ -1426,6 +1428,8 @@ if fits_qc.sera:
         ticksize=10,
         ncol=6,
         draw_in_bounds=True,
+        sharex=False,
+        sharey=False,
     )
     report.figure(fig_passed_qc, curve_display_method)
 else:
